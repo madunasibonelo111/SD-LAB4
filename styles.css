@@ -1,0 +1,54 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.search-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.country-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.border-grid {
+    display: grid;   /* REQUIRED */
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 5px solid #ccc;
+    border-top: 5px solid #333;
+    border-radius: 50%;
+    margin: 20px auto;
+    animation: spin 1s linear infinite; /* REQUIRED */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error {
+    color: red;   /* REQUIRED distinct styling */
+    text-align: center;
+    margin-top: 15px;
+}
+
+.hidden {
+    display: none;   /* REQUIRED */
+}
