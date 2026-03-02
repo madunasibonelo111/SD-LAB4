@@ -1,8 +1,9 @@
-// ===============================
-// 1. GET ALL HTML ELEMENTS
-// ===============================
+// tested this, from the console and with the live server extention so everthing works alright.
 
-// We use document.getElementById to connect JavaScript to HTML elements
+
+// so i first have to get all html elements
+
+// using document.getElementById to connect javascript to html elements
 
 const countryInput = document.getElementById("country-input");
 const searchButton = document.getElementById("search-btn");
@@ -12,16 +13,14 @@ const borderingCountriesSection = document.getElementById("bordering-countries")
 const errorMessageDiv = document.getElementById("error-message");
 
 
-// ===============================
-// 2. ADD EVENT LISTENERS
-// ===============================
+// i am gonna put the event listener here
 
-// When the button is clicked, call the searchCountry function
+// when the button is pressed on, i want to call the searchCountry function
 searchButton.addEventListener("click", function () {
     searchCountry();
 });
 
-// When the user presses a key inside the input
+// when the user presses a key inside the input
 countryInput.addEventListener("keypress", function (event) {
     // If the key pressed is "Enter"
     if (event.key === "Enter") {
@@ -29,49 +28,49 @@ countryInput.addEventListener("keypress", function (event) {
     }
 });
 
+// this is my main method to search the countries
 
-// ===============================
-// 3. MAIN FUNCTION TO SEARCH COUNTRY
-// ===============================
 
 async function searchCountry() {
 
-    // Get the value from the input box
-    const countryName = countryInput.value;
+    // get my value from the input box after i input
+    const countryName = countryInput.value.trim(); // trim whitespace
 
-    // If input is empty, stop the function
+    // if input is empty, stop the function
     if (countryName === "") {
         return;
     }
 
-    // Clear old data before new search
+    // move the old data before new search
     clearPreviousResults();
 
-    // Show loading spinner
+    // show loading spinner
     loadingSpinner.classList.remove("hidden");
 
     try {
-        // Fetch data from REST Countries API
+        // fetching data from rest countries api
         const response = await fetch(
-            "https://restcountries.com/v3.1/name/" + countryName
+            "https://restcountries.com/v3.1/name/"+countryName
         );
 
-        // If the country does not exist
-        if (response.ok === false) {
+        // if the country does not exist
+        if (response.ok===false){
             throw new Error("Country not found");
         }
 
-        // Convert response to JSON
-        const data = await response.json();
+        // convert response to json
+        const data=await response.json();
 
-        // The API returns an array, we take the first result
-        const country = data[0];
+        // this api returns an array, we try to find exact match first
+        const country = data.find(function(c){ // exact name match
+            return c.name.common.toLowerCase() === countryName.toLowerCase();
+        }) || data[0]; // fallback to first
 
-        // Display main country information
+        // show main country information
         displayCountryInformation(country);
 
         // Display bordering countries if they exist
-        if (country.borders) {
+        if (country.borders && country.borders.length > 0){ // checking length
             displayBorderingCountries(country.borders);
         }
 
@@ -85,11 +84,6 @@ async function searchCountry() {
     loadingSpinner.classList.add("hidden");
 }
 
-
-// ===============================
-// 4. DISPLAY MAIN COUNTRY INFO
-// ===============================
-
 function displayCountryInformation(country) {
 
     // Show the country info section
@@ -101,32 +95,27 @@ function displayCountryInformation(country) {
     // Insert HTML into the section
     countryInfoSection.innerHTML =
         "<h2>" + country.name.common + "</h2>" +
-        "<img src='" + country.flags.png + "' width='150'>" +
+        "<img src='" + country.flags.svg + "' width='150'>" + // used svg
         "<p><strong>Capital:</strong> " + 
             (country.capital ? country.capital[0] : "N/A") + "</p>" +
         "<p><strong>Population:</strong> " + formattedPopulation + "</p>" +
         "<p><strong>Region:</strong> " + country.region + "</p>";
 }
 
-
-// ===============================
-// 5. DISPLAY BORDERING COUNTRIES
-// ===============================
+// sdisplaying the bordering countries
 
 async function displayBorderingCountries(borderCodes) {
 
-    // Show bordering countries section
+    // bordering country section here
     borderingCountriesSection.classList.remove("hidden");
-
-    // Add a title
     borderingCountriesSection.innerHTML = "<h3>Bordering Countries:</h3>";
 
-    // Loop through each border country code
+    // got this help from chatgpt ... although i understand here.
     for (let i = 0; i < borderCodes.length; i++) {
 
         const code = borderCodes[i];
 
-        // Fetch each bordering country using its code
+        // fetch each bordering country using its code
         const response = await fetch(
             "https://restcountries.com/v3.1/alpha/" + code
         );
@@ -134,31 +123,29 @@ async function displayBorderingCountries(borderCodes) {
         const data = await response.json();
         const borderCountry = data[0];
 
-        // Create a new div for each bordering country
+        // make a new div for each bordering country
         const div = document.createElement("div");
+        div.className = "country-card";
 
         div.innerHTML =
-            "<img src='" + borderCountry.flags.png + "' width='80'>" +
+            "<img src='" + borderCountry.flags.svg + "' width='80'>" + // using svg now
             "<p>" + borderCountry.name.common + "</p>";
 
-        // Add it to the section
+        // add it to the section
         borderingCountriesSection.appendChild(div);
     }
 }
 
-
-// ===============================
-// 6. CLEAR OLD RESULTS
-// ===============================
+// move old results
 
 function clearPreviousResults() {
 
-    // Hide sections
+    // hide the sections
     countryInfoSection.classList.add("hidden");
     borderingCountriesSection.classList.add("hidden");
     errorMessageDiv.classList.add("hidden");
 
-    // Clear previous content
+    // moving previous content
     countryInfoSection.innerHTML = "";
     borderingCountriesSection.innerHTML = "";
 }

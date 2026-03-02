@@ -17,15 +17,18 @@ header {
 
 .country-card {
     background: white;
-    padding: 20px;
+    padding: 15px;
     border-radius: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .border-grid {
-    display: grid;   /* REQUIRED */
+    display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 10px;
+    margin-top: 15px;
 }
 
 .spinner {
@@ -35,7 +38,7 @@ header {
     border-top: 5px solid #333;
     border-radius: 50%;
     margin: 20px auto;
-    animation: spin 1s linear infinite; /* REQUIRED */
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -44,11 +47,21 @@ header {
 }
 
 .error {
-    color: red;   /* REQUIRED distinct styling */
+    color: red;
     text-align: center;
     margin-top: 15px;
 }
 
 .hidden {
-    display: none;   /* REQUIRED */
+    display: none;
+}
+
+#country-info img, #bordering-countries img {
+    max-width: 100%;
+    height: auto;
+}
+
+#bordering-countries .country-card {
+    padding: 10px;
+    font-size: 0.9rem;
 }
